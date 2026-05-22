@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>킬링파트 앱 다운로드</title>
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <style>
       :root {
         --bg1: #0f172a;
@@ -145,6 +153,7 @@
           "https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638";
         var PLAY_STORE_URL =
           "https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko";
+        var REDIRECT_DELAY_MS = 450;
 
         var statusEl = document.getElementById("status");
 
@@ -171,15 +180,18 @@
 
         function tryRedirect(url, label) {
           statusEl.textContent =
-            label + "로 자동 이동을 시도합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
+            label +
+            "로 곧 자동 이동합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
           updateFallbackMessage(label);
 
-          try {
-            window.location.replace(url);
-          } catch (error) {
-            statusEl.textContent =
-              "자동 이동에 실패했습니다. 아래 버튼을 눌러 " + label + "로 이동해주세요.";
-          }
+          setTimeout(function () {
+            try {
+              window.location.replace(url);
+            } catch (error) {
+              statusEl.textContent =
+                "자동 이동에 실패했습니다. 아래 버튼을 눌러 " + label + "로 이동해주세요.";
+            }
+          }, REDIRECT_DELAY_MS);
         }
 
         var deviceType = detectDeviceType();

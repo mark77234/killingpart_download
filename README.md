@@ -48,7 +48,30 @@ DOWNLOAD_URL="https://내도메인.com/download" npm run generate:qr
 - QR에는 반드시 `/download` 경로를 넣으세요.
 - 스토어 링크는 다운로드 페이지 내부에서만 사용됩니다.
 
-## 4) 테스트 방법
+## 4) Vercel Analytics 적용
+
+`/download/index.html`에 Vercel Analytics 스니펫이 포함되어 있습니다.
+
+```html
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+```
+
+대시보드에서 아래를 진행해야 실제 수집이 시작됩니다.
+
+1. Vercel 프로젝트 접속
+2. `Analytics` 탭으로 이동
+3. `Enable Analytics` 클릭
+4. 필요 시 재배포(또는 새 커밋 푸시) 후 반영 확인
+
+QR 접속 사용자 확인 방법:
+
+- QR URL을 `https://.../download`로 유지하면, Analytics에서 `/download` 페이지뷰로 집계됩니다.
+- Vercel 대시보드의 Analytics 화면에서 시간대별 방문 추이를 확인하세요.
+
+## 5) 테스트 방법
 
 아래 시나리오를 각각 확인하세요.
 

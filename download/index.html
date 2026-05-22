@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>킬링파트 앱 다운로드</title>
+    <style>
+      :root {
+        --bg1: #0f172a;
+        --bg2: #1e293b;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --blue: #1d4ed8;
+        --green: #15803d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        background: radial-gradient(circle at 20% 10%, #334155 0%, #1e293b 35%, #0f172a 100%);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .card {
+        width: min(560px, 100%);
+        background: var(--card);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 18px 48px rgba(15, 23, 42, 0.35);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.9rem;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .description {
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      .status {
+        margin-top: 12px;
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-size: 0.96rem;
+      }
+
+      .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 700;
+        min-height: 48px;
+        padding: 10px 12px;
+      }
+
+      .button.app-store {
+        background: var(--blue);
+      }
+
+      .button.play-store {
+        background: var(--green);
+      }
+
+      .note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 520px) {
+        h1 {
+          font-size: 1.6rem;
+        }
+
+        .buttons {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>킬링파트 앱 다운로드</h1>
+      <p class="description">
+        접속한 기기를 확인해 스토어로 자동 이동을 시도합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.
+      </p>
+
+      <p id="status" class="status">기기 정보를 확인하는 중입니다...</p>
+
+      <div class="buttons">
+        <a
+          id="appStoreButton"
+          class="button app-store"
+          href="https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638"
+        >
+          App Store에서 받기
+        </a>
+        <a
+          id="playStoreButton"
+          class="button play-store"
+          href="https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko"
+        >
+          Google Play에서 받기
+        </a>
+      </div>
+
+      <p class="note">PC/Mac 또는 일부 브라우저 환경에서는 자동 이동 대신 버튼 안내가 표시됩니다.</p>
+
+      <noscript>
+        <p class="note">브라우저에서 JavaScript가 꺼져 있어 자동 이동을 사용할 수 없습니다. 위 버튼을 이용해주세요.</p>
+      </noscript>
+    </main>
+
+    <script>
+      (function () {
+        var APP_STORE_URL =
+          "https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638";
+        var PLAY_STORE_URL =
+          "https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko";
+
+        var statusEl = document.getElementById("status");
+
+        function detectDeviceType() {
+          var ua = navigator.userAgent || "";
+          var platform = navigator.platform || "";
+          var touchPoints = navigator.maxTouchPoints || 0;
+
+          var isIOS =
+            /iPhone|iPad|iPod/i.test(ua) || (platform === "MacIntel" && touchPoints > 1);
+          var isAndroid = /Android/i.test(ua);
+
+          if (isIOS) return "ios";
+          if (isAndroid) return "android";
+          return "other";
+        }
+
+        function updateFallbackMessage(label) {
+          setTimeout(function () {
+            statusEl.textContent =
+              "자동 이동이 되지 않았나요? 아래 '" + label + "' 버튼을 눌러 설치를 진행해주세요.";
+          }, 2200);
+        }
+
+        function tryRedirect(url, label) {
+          statusEl.textContent =
+            label + "로 자동 이동을 시도합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
+          updateFallbackMessage(label);
+
+          try {
+            window.location.replace(url);
+          } catch (error) {
+            statusEl.textContent =
+              "자동 이동에 실패했습니다. 아래 버튼을 눌러 " + label + "로 이동해주세요.";
+          }
+        }
+
+        var deviceType = detectDeviceType();
+
+        if (deviceType === "ios") {
+          tryRedirect(APP_STORE_URL, "App Store");
+          return;
+        }
+
+        if (deviceType === "android") {
+          tryRedirect(PLAY_STORE_URL, "Google Play");
+          return;
+        }
+
+        statusEl.textContent =
+          "현재 기기에서는 자동 이동을 진행하지 않습니다. 아래에서 원하는 스토어를 선택해주세요.";
+      })();
+    </script>
+  </body>
+</html>

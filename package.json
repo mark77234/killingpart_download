@@ -1,0 +1,12 @@
+{
+  "name": "killingpart-download",
+  "private": true,
+  "version": "1.0.0",
+  "description": "킬링파트 다운로드 라우팅 페이지 및 QR 생성 스크립트",
+  "scripts": {
+    "generate:qr": "node -e \"if (!process.env.DOWNLOAD_URL) { console.error('DOWNLOAD_URL 환경변수를 설정하세요. 예: DOWNLOAD_URL=https://example.com/download npm run generate:qr'); process.exit(1); }\" && qrcode \"$DOWNLOAD_URL\" -o killingpart-download-qr.png"
+  },
+  "devDependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

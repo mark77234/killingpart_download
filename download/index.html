@@ -13,138 +13,332 @@
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
+      @font-face {
+        font-family: "Paperlogy";
+        src: url("/resources/font/Paperlogy-4Regular.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Paperlogy";
+        src: url("/resources/font/Paperlogy-6SemiBold.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Paperlogy";
+        src: url("/resources/font/Paperlogy-8ExtraBold.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 800;
+        font-display: swap;
+      }
+
       :root {
-        --bg1: #0f172a;
-        --bg2: #1e293b;
-        --card: #ffffff;
-        --text: #0f172a;
-        --muted: #475569;
-        --blue: #1d4ed8;
-        --green: #15803d;
+        --primary: #ceff43;
+        --bg: #090a0f;
+        --bg-soft: #12141b;
+        --bg-card: #151720;
+        --text-main: #f5f7fb;
+        --text-muted: #a2a8b6;
+        --stroke: rgba(255, 255, 255, 0.08);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
+      body {
+        height: 100%;
+      }
+
       body {
         margin: 0;
-        min-height: 100vh;
-        font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-        background: radial-gradient(circle at 20% 10%, #334155 0%, #1e293b 35%, #0f172a 100%);
-        color: var(--text);
+        font-family: "Paperlogy", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        color: var(--text-main);
+        background:
+          radial-gradient(1200px 800px at 15% -10%, rgba(206, 255, 67, 0.18), transparent 50%),
+          radial-gradient(900px 600px at 90% 5%, rgba(206, 255, 67, 0.07), transparent 50%),
+          var(--bg);
+      }
+
+      .page {
+        width: min(920px, 100% - 40px);
+        margin: 0 auto;
+        padding: 56px 0 44px;
+      }
+
+      .hero {
         display: grid;
-        place-items: center;
-        padding: 20px;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 28px;
+        align-items: end;
       }
 
-      .card {
-        width: min(560px, 100%);
-        background: var(--card);
-        border-radius: 18px;
-        padding: 28px;
-        box-shadow: 0 18px 48px rgba(15, 23, 42, 0.35);
+      .brand-logo {
+        width: min(460px, 100%);
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 0 22px rgba(206, 255, 67, 0.16));
       }
 
-      h1 {
-        margin: 0 0 8px;
+      .brand-subline {
+        margin: 14px 0 0;
         font-size: 1.9rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--primary);
       }
 
-      p {
+      .hero-copy {
+        text-align: right;
+        align-self: center;
+      }
+
+      .hero-copy p {
         margin: 0;
-        line-height: 1.6;
+      }
+
+      .hero-copy .kicker {
+        color: var(--primary);
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.015em;
+      }
+
+      .hero-copy .headline {
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        line-height: 1.08;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-copy .headline .accent {
+        color: var(--primary);
+      }
+
+      .download-panel {
+        margin-top: 44px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+        border: 1px solid var(--stroke);
+        border-radius: 28px;
+        padding: 30px 24px 24px;
+        backdrop-filter: blur(10px);
+      }
+
+      .download-title {
+        margin: 0;
+        font-size: clamp(1.8rem, 3.3vw, 2.4rem);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+      }
+
+      .download-title .accent {
+        color: var(--primary);
       }
 
       .description {
-        color: var(--muted);
-        margin-bottom: 16px;
+        margin: 14px 0 0;
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.58;
       }
 
       .status {
-        margin-top: 12px;
-        margin-bottom: 18px;
-        padding: 12px 14px;
-        border-radius: 10px;
-        background: #eff6ff;
-        color: #1e3a8a;
-        font-size: 0.96rem;
+        margin: 20px 0;
+        border-radius: 16px;
+        padding: 14px 16px;
+        background: var(--bg-soft);
+        border: 1px solid rgba(206, 255, 67, 0.16);
+        color: #d7deea;
+        font-size: 0.97rem;
+        line-height: 1.5;
       }
 
-      .buttons {
+      .store-buttons {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 12px;
       }
 
-      .button {
-        display: inline-flex;
+      .store-button {
+        min-height: 82px;
+        border-radius: 22px;
+        padding: 10px 16px;
+        display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 12px;
         text-decoration: none;
-        border-radius: 10px;
-        color: #ffffff;
+        border: 1px solid transparent;
+        transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+      }
+
+      .store-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .store-button:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      .store-button img {
+        width: 44px;
+        height: 44px;
+        border-radius: 11px;
+        flex-shrink: 0;
+      }
+
+      .store-text {
+        display: grid;
+      }
+
+      .store-text strong {
+        font-size: 1.2rem;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+
+      .store-text span {
+        margin-top: 4px;
+        font-size: 0.9rem;
+        color: inherit;
+        opacity: 0.8;
+      }
+
+      .store-arrow {
+        margin-left: auto;
+        font-size: 1.2rem;
         font-weight: 700;
-        min-height: 48px;
-        padding: 10px 12px;
       }
 
-      .button.app-store {
-        background: var(--blue);
+      .store-button.app-store {
+        background: var(--primary);
+        color: #06080d;
       }
 
-      .button.play-store {
-        background: var(--green);
+      .store-button.play-store {
+        background: #2a2d36;
+        color: #f6f7fb;
+      }
+
+      .store-button.recommended {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(206, 255, 67, 0.16);
       }
 
       .note {
-        margin-top: 12px;
-        color: var(--muted);
+        margin: 14px 0 0;
+        color: var(--text-muted);
         font-size: 0.92rem;
+        line-height: 1.5;
       }
 
-      @media (max-width: 520px) {
-        h1 {
-          font-size: 1.6rem;
+      .noscript {
+        margin: 14px 0 0;
+        color: #ffdfdf;
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 860px) {
+        .page {
+          width: min(920px, 100% - 28px);
+          padding-top: 40px;
         }
 
-        .buttons {
+        .hero {
           grid-template-columns: 1fr;
+          gap: 22px;
+        }
+
+        .hero-copy {
+          text-align: left;
+        }
+
+        .hero-copy .kicker {
+          font-size: 1.65rem;
+        }
+
+        .brand-subline {
+          font-size: 1.45rem;
+        }
+
+        .download-panel {
+          margin-top: 30px;
+          border-radius: 24px;
+          padding: 24px 18px 18px;
+        }
+
+        .store-button {
+          min-height: 74px;
+          border-radius: 18px;
         }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>킬링파트 앱 다운로드</h1>
-      <p class="description">
-        접속한 기기를 확인해 스토어로 자동 이동을 시도합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.
-      </p>
+    <main class="page">
+      <section class="hero" aria-label="킬링파트 소개">
+        <div>
+          <img class="brand-logo" src="/resources/icon/ic_killingpart.svg" alt="킬링파트 로고" />
+          <p class="brand-subline">짧게 들어도, 길게 남는 순간</p>
+        </div>
 
-      <p id="status" class="status">기기 정보를 확인하는 중입니다...</p>
+        <div class="hero-copy">
+          <p class="kicker">킬링파트 앱에서</p>
+          <p class="headline"><span class="accent">7초의 몰입</span>을 시작하세요</p>
+        </div>
+      </section>
 
-      <div class="buttons">
-        <a
-          id="appStoreButton"
-          class="button app-store"
-          href="https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638"
-        >
-          App Store에서 받기
-        </a>
-        <a
-          id="playStoreButton"
-          class="button play-store"
-          href="https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko"
-        >
-          Google Play에서 받기
-        </a>
-      </div>
+      <section class="download-panel" aria-label="스토어 다운로드">
+        <h1 class="download-title"><span class="accent">킬링파트</span> 앱 다운로드</h1>
+        <p class="description">
+          접속한 기기를 확인해 적절한 스토어로 자동 이동을 시도합니다. 이동이 안 되면 아래 버튼을 눌러 직접 설치해 주세요.
+        </p>
 
-      <p class="note">PC/Mac 또는 일부 브라우저 환경에서는 자동 이동 대신 버튼 안내가 표시됩니다.</p>
+        <p id="status" class="status" aria-live="polite">기기 정보를 확인하는 중입니다...</p>
 
-      <noscript>
-        <p class="note">브라우저에서 JavaScript가 꺼져 있어 자동 이동을 사용할 수 없습니다. 위 버튼을 이용해주세요.</p>
-      </noscript>
+        <div class="store-buttons">
+          <a
+            id="appStoreButton"
+            class="store-button app-store"
+            href="https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638"
+          >
+            <img src="/resources/icon/ic_appstore.png" alt="App Store 아이콘" />
+            <span class="store-text">
+              <strong>App Store</strong>
+              <span>iPhone / iPad / iPod</span>
+            </span>
+            <span class="store-arrow" aria-hidden="true">↗</span>
+          </a>
+
+          <a
+            id="playStoreButton"
+            class="store-button play-store"
+            href="https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko"
+          >
+            <img src="/resources/icon/ic_playstore.png" alt="Google Play 아이콘" />
+            <span class="store-text">
+              <strong>Google Play</strong>
+              <span>Android</span>
+            </span>
+            <span class="store-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <p class="note">PC/Mac 또는 일부 브라우저에서는 자동 이동 대신 버튼 안내가 유지됩니다.</p>
+
+        <noscript>
+          <p class="noscript">
+            브라우저에서 JavaScript가 꺼져 있어 자동 이동을 사용할 수 없습니다. 위 스토어 버튼을 눌러 설치해 주세요.
+          </p>
+        </noscript>
+      </section>
     </main>
 
     <script>
@@ -156,6 +350,8 @@
         var REDIRECT_DELAY_MS = 450;
 
         var statusEl = document.getElementById("status");
+        var appStoreButton = document.getElementById("appStoreButton");
+        var playStoreButton = document.getElementById("playStoreButton");
 
         function detectDeviceType() {
           var ua = navigator.userAgent || "";
@@ -171,6 +367,19 @@
           return "other";
         }
 
+        function markRecommendedButton(deviceType) {
+          appStoreButton.classList.remove("recommended");
+          playStoreButton.classList.remove("recommended");
+
+          if (deviceType === "ios") {
+            appStoreButton.classList.add("recommended");
+          }
+
+          if (deviceType === "android") {
+            playStoreButton.classList.add("recommended");
+          }
+        }
+
         function updateFallbackMessage(label) {
           setTimeout(function () {
             statusEl.textContent =
@@ -178,10 +387,11 @@
           }, 2200);
         }
 
-        function tryRedirect(url, label) {
+        function tryRedirect(url, label, deviceType) {
+          markRecommendedButton(deviceType);
+
           statusEl.textContent =
-            label +
-            "로 곧 자동 이동합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
+            label + "로 곧 자동 이동합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
           updateFallbackMessage(label);
 
           setTimeout(function () {
@@ -197,12 +407,12 @@
         var deviceType = detectDeviceType();
 
         if (deviceType === "ios") {
-          tryRedirect(APP_STORE_URL, "App Store");
+          tryRedirect(APP_STORE_URL, "App Store", "ios");
           return;
         }
 
         if (deviceType === "android") {
-          tryRedirect(PLAY_STORE_URL, "Google Play");
+          tryRedirect(PLAY_STORE_URL, "Google Play", "android");
           return;
         }
 

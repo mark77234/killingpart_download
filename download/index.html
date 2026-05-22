@@ -58,11 +58,21 @@
 
       body {
         margin: 0;
-        font-family: "Paperlogy", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        font-family:
+          "Paperlogy", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+          sans-serif;
         color: var(--text-main);
         background:
-          radial-gradient(1200px 800px at 15% -10%, rgba(206, 255, 67, 0.18), transparent 50%),
-          radial-gradient(900px 600px at 90% 5%, rgba(206, 255, 67, 0.07), transparent 50%),
+          radial-gradient(
+            1200px 800px at 15% -10%,
+            rgba(206, 255, 67, 0.18),
+            transparent 50%
+          ),
+          radial-gradient(
+            900px 600px at 90% 5%,
+            rgba(206, 255, 67, 0.07),
+            transparent 50%
+          ),
           var(--bg);
       }
 
@@ -124,7 +134,11 @@
 
       .download-panel {
         margin-top: 44px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.015)
+        );
         border: 1px solid var(--stroke);
         border-radius: 28px;
         padding: 30px 24px 24px;
@@ -175,7 +189,10 @@
         gap: 12px;
         text-decoration: none;
         border: 1px solid transparent;
-        transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background-color 0.16s ease;
       }
 
       .store-button:hover {
@@ -218,8 +235,8 @@
       }
 
       .store-button.app-store {
-        background: var(--primary);
-        color: #06080d;
+        background: #2a2d36;
+        color: #f6f7fb;
       }
 
       .store-button.play-store {
@@ -285,23 +302,31 @@
     <main class="page">
       <section class="hero" aria-label="킬링파트 소개">
         <div>
-          <img class="brand-logo" src="/resources/icon/ic_killingpart.svg" alt="킬링파트 로고" />
+          <img
+            class="brand-logo"
+            src="/resources/icon/ic_killingpart.svg"
+            alt="킬링파트 로고"
+          />
           <p class="brand-subline">짧게 들어도, 길게 남는 순간</p>
         </div>
 
         <div class="hero-copy">
           <p class="kicker">킬링파트 앱에서</p>
-          <p class="headline"><span class="accent">7초의 몰입</span>을 시작하세요</p>
         </div>
       </section>
 
       <section class="download-panel" aria-label="스토어 다운로드">
-        <h1 class="download-title"><span class="accent">킬링파트</span> 앱 다운로드</h1>
+        <h1 class="download-title">
+          <span class="accent">킬링파트</span> 앱 다운로드
+        </h1>
         <p class="description">
-          접속한 기기를 확인해 적절한 스토어로 자동 이동을 시도합니다. 이동이 안 되면 아래 버튼을 눌러 직접 설치해 주세요.
+          접속한 기기를 확인해 적절한 스토어로 자동 이동을 시도합니다. 이동이 안
+          되면 아래 버튼을 눌러 직접 설치해 주세요.
         </p>
 
-        <p id="status" class="status" aria-live="polite">기기 정보를 확인하는 중입니다...</p>
+        <p id="status" class="status" aria-live="polite">
+          기기 정보를 확인하는 중입니다...
+        </p>
 
         <div class="store-buttons">
           <a
@@ -322,7 +347,10 @@
             class="store-button play-store"
             href="https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko"
           >
-            <img src="/resources/icon/ic_playstore.png" alt="Google Play 아이콘" />
+            <img
+              src="/resources/icon/ic_playstore.png"
+              alt="Google Play 아이콘"
+            />
             <span class="store-text">
               <strong>Google Play</strong>
               <span>Android</span>
@@ -331,11 +359,14 @@
           </a>
         </div>
 
-        <p class="note">PC/Mac 또는 일부 브라우저에서는 자동 이동 대신 버튼 안내가 유지됩니다.</p>
+        <p class="note">
+          PC/Mac 또는 일부 브라우저에서는 자동 이동 대신 버튼 안내가 유지됩니다.
+        </p>
 
         <noscript>
           <p class="noscript">
-            브라우저에서 JavaScript가 꺼져 있어 자동 이동을 사용할 수 없습니다. 위 스토어 버튼을 눌러 설치해 주세요.
+            브라우저에서 JavaScript가 꺼져 있어 자동 이동을 사용할 수 없습니다.
+            위 스토어 버튼을 눌러 설치해 주세요.
           </p>
         </noscript>
       </section>
@@ -359,7 +390,8 @@
           var touchPoints = navigator.maxTouchPoints || 0;
 
           var isIOS =
-            /iPhone|iPad|iPod/i.test(ua) || (platform === "MacIntel" && touchPoints > 1);
+            /iPhone|iPad|iPod/i.test(ua) ||
+            (platform === "MacIntel" && touchPoints > 1);
           var isAndroid = /Android/i.test(ua);
 
           if (isIOS) return "ios";
@@ -383,7 +415,9 @@
         function updateFallbackMessage(label) {
           setTimeout(function () {
             statusEl.textContent =
-              "자동 이동이 되지 않았나요? 아래 '" + label + "' 버튼을 눌러 설치를 진행해주세요.";
+              "자동 이동이 되지 않았나요? 아래 '" +
+              label +
+              "' 버튼을 눌러 설치를 진행해주세요.";
           }, 2200);
         }
 
@@ -391,7 +425,8 @@
           markRecommendedButton(deviceType);
 
           statusEl.textContent =
-            label + "로 곧 자동 이동합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
+            label +
+            "로 곧 자동 이동합니다. 자동 이동이 되지 않으면 아래 버튼을 눌러주세요.";
           updateFallbackMessage(label);
 
           setTimeout(function () {
@@ -399,7 +434,9 @@
               window.location.replace(url);
             } catch (error) {
               statusEl.textContent =
-                "자동 이동에 실패했습니다. 아래 버튼을 눌러 " + label + "로 이동해주세요.";
+                "자동 이동에 실패했습니다. 아래 버튼을 눌러 " +
+                label +
+                "로 이동해주세요.";
             }
           }, REDIRECT_DELAY_MS);
         }

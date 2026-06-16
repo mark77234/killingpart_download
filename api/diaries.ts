@@ -22,6 +22,9 @@ function renderFallbackPage() {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KillingPart</title>
+    <link rel="icon" type="image/png" href="/resources/icon/ic_KillingPart.png" />
+    <link rel="icon" type="image/png" href="/resources/icon/ic_dark_KillingPart.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" href="/resources/icon/ic_alpha_KillingPart.png" />
     <style>
       * {
         box-sizing: border-box;

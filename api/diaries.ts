@@ -2,8 +2,13 @@ const APP_STORE_URL =
   "https://apps.apple.com/us/app/%ED%82%AC%EB%A7%81%ED%8C%8C%ED%8A%B8-killingpart/id6758883638";
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.killingpart.killingpoint&hl=ko";
+const ANDROID_PACKAGE_NAME = "com.killingpart.killingpoint";
+const APP_SCHEME = "killingpart";
+const STORE_FALLBACK_DELAY_MS = 1500;
 
 const DIARY_ID_PATTERN = /^[1-9]\d*$/;
+
+type DevicePlatform = "ios" | "android" | "other";
 
 function redirect(location: string) {
   return new Response(null, {
@@ -15,7 +20,72 @@ function redirect(location: string) {
   });
 }
 
-function renderFallbackPage() {
+function renderFallbackPage({
+  diaryId,
+  platform,
+  showOpenAppButton
+}: {
+  diaryId: string;
+  platform: DevicePlatform;
+  showOpenAppButton: boolean;
+}) {
+  const customSchemeUrl = `${APP_SCHEME}://diaries/${diaryId}`;
+  const androidIntentUrl = `intent://diaries/${diaryId}#Intent;scheme=${APP_SCHEME};package=${ANDROID_PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(
+    PLAY_STORE_URL
+  )};end`;
+  const appOpenUrl = platform === "android" ? androidIntentUrl : customSchemeUrl;
+  const storeUrl = platform === "android" ? PLAY_STORE_URL : APP_STORE_URL;
+  const description = showOpenAppButton
+    ? "카카오톡 안에서는 앱이 바로 열리지 않을 수 있습니다. 아래 버튼을 눌러 킬링파트 앱에서 이어서 확인해 주세요."
+    : "모바일 기기에서 접속하면 스토어로 자동 이동합니다. 데스크톱에서는 아래 버튼으로 앱을 설치해 주세요.";
+  const openAppButton = showOpenAppButton
+    ? `<button id="openAppButton" type="button">앱에서 열기</button>
+        <p id="openAppStatus" class="status" aria-live="polite"></p>`
+    : "";
+  const openAppScript = showOpenAppButton
+    ? `<script>
+      (function () {
+        var openAppButton = document.getElementById("openAppButton");
+        var statusEl = document.getElementById("openAppStatus");
+        if (!openAppButton || !statusEl) return;
+
+        var appOpenUrl = ${JSON.stringify(appOpenUrl)};
+        var storeUrl = ${JSON.stringify(storeUrl)};
+        var fallbackDelay = ${STORE_FALLBACK_DELAY_MS};
+        var fallbackTimer = null;
+
+        function clearFallbackTimer() {
+          if (!fallbackTimer) return;
+          clearTimeout(fallbackTimer);
+          fallbackTimer = null;
+        }
+
+        function cancelFallbackIfAppOpened() {
+          clearFallbackTimer();
+        }
+
+        document.addEventListener("visibilitychange", function () {
+          if (document.hidden) {
+            cancelFallbackIfAppOpened();
+          }
+        });
+        window.addEventListener("pagehide", cancelFallbackIfAppOpened);
+
+        openAppButton.addEventListener("click", function () {
+          clearFallbackTimer();
+          statusEl.textContent =
+            "앱을 여는 중입니다. 앱이 열리지 않으면 스토어로 이동합니다.";
+
+          window.location.href = appOpenUrl;
+
+          fallbackTimer = setTimeout(function () {
+            window.location.href = storeUrl;
+          }, fallbackDelay);
+        });
+      })();
+    </script>`
+    : "";
+
   return `<!doctype html>
 <html lang="ko">
   <head>
@@ -64,34 +134,48 @@ function renderFallbackPage() {
         gap: 12px;
       }
 
-      a {
+      a,
+      button {
         min-height: 56px;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        border: 0;
         border-radius: 14px;
         background: #ceff43;
         color: #090a0f;
+        font: inherit;
         font-weight: 700;
         text-decoration: none;
+        cursor: pointer;
       }
 
-      a.secondary {
+      a.secondary,
+      button.secondary {
         border: 1px solid rgba(255, 255, 255, 0.16);
         background: #151720;
         color: #f5f7fb;
+      }
+
+      .status {
+        min-height: 1.4em;
+        margin: 12px 0 0;
+        font-size: 0.94rem;
       }
     </style>
   </head>
   <body>
     <main>
       <h1>킬링파트 앱에서 열기</h1>
-      <p>모바일 기기에서 접속하면 스토어로 자동 이동합니다. 데스크톱에서는 아래 버튼으로 앱을 설치해 주세요.</p>
+      <p>${description}</p>
       <div class="buttons">
+        ${openAppButton}
         <a href="${APP_STORE_URL}">App Store에서 열기</a>
         <a class="secondary" href="${PLAY_STORE_URL}">Google Play에서 열기</a>
       </div>
     </main>
+    ${openAppScript}
   </body>
 </html>`;
 }
@@ -115,6 +199,29 @@ export function GET(request: Request) {
     /iPhone|iPad|iPod/i.test(userAgent) ||
     (/Macintosh/i.test(userAgent) && /Mobile/i.test(userAgent));
   const isAndroid = /Android/i.test(userAgent);
+  const isKakaoTalk = /KAKAOTALK|KakaoTalk/i.test(userAgent);
+  const platform: DevicePlatform = isIOS
+    ? "ios"
+    : isAndroid
+      ? "android"
+      : "other";
+
+  if (isKakaoTalk) {
+    return new Response(
+      renderFallbackPage({
+        diaryId,
+        platform,
+        showOpenAppButton: platform !== "other"
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-store"
+        }
+      }
+    );
+  }
 
   if (isIOS) {
     return redirect(APP_STORE_URL);
@@ -124,11 +231,18 @@ export function GET(request: Request) {
     return redirect(PLAY_STORE_URL);
   }
 
-  return new Response(renderFallbackPage(), {
-    status: 200,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-store"
+  return new Response(
+    renderFallbackPage({
+      diaryId,
+      platform,
+      showOpenAppButton: false
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store"
+      }
     }
-  });
+  );
 }

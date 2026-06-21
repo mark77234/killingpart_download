@@ -9,6 +9,24 @@ const STORE_FALLBACK_DELAY_MS = 1500;
 const DIARY_ID_PATTERN = /^[1-9]\d*$/;
 
 type DevicePlatform = "ios" | "android" | "other";
+type InAppBrowser = "kakao" | "instagram";
+
+const IN_APP_BROWSER_LABELS: Record<InAppBrowser, string> = {
+  kakao: "카카오톡",
+  instagram: "인스타그램"
+};
+
+function detectInAppBrowser(userAgent: string): InAppBrowser | null {
+  if (/KAKAOTALK/i.test(userAgent)) {
+    return "kakao";
+  }
+
+  if (/Instagram|FBAN\/Instagram/i.test(userAgent)) {
+    return "instagram";
+  }
+
+  return null;
+}
 
 function redirect(location: string) {
   return new Response(null, {
@@ -23,12 +41,13 @@ function redirect(location: string) {
 function renderFallbackPage({
   diaryId,
   platform,
-  showOpenAppButton
+  inAppBrowser
 }: {
   diaryId: string;
   platform: DevicePlatform;
-  showOpenAppButton: boolean;
+  inAppBrowser: InAppBrowser | null;
 }) {
+  const showOpenAppButton = inAppBrowser !== null && platform !== "other";
   const customSchemeUrl = `${APP_SCHEME}://diaries/${diaryId}`;
   const androidIntentUrl = `intent://diaries/${diaryId}#Intent;scheme=${APP_SCHEME};package=${ANDROID_PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(
     PLAY_STORE_URL
@@ -36,7 +55,7 @@ function renderFallbackPage({
   const appOpenUrl = platform === "android" ? androidIntentUrl : customSchemeUrl;
   const storeUrl = platform === "android" ? PLAY_STORE_URL : APP_STORE_URL;
   const description = showOpenAppButton
-    ? "카카오톡 안에서는 앱이 바로 열리지 않을 수 있습니다. 아래 버튼을 눌러 킬링파트 앱에서 이어서 확인해 주세요."
+    ? `${IN_APP_BROWSER_LABELS[inAppBrowser]} 안에서는 앱이 바로 열리지 않을 수 있습니다. 아래 버튼을 눌러 킬링파트 앱에서 이어서 확인해 주세요.`
     : "모바일 기기에서 접속하면 스토어로 자동 이동합니다. 데스크톱에서는 아래 버튼으로 앱을 설치해 주세요.";
   const openAppButton = showOpenAppButton
     ? `<button id="openAppButton" type="button">앱에서 열기</button>
@@ -199,19 +218,19 @@ export function GET(request: Request) {
     /iPhone|iPad|iPod/i.test(userAgent) ||
     (/Macintosh/i.test(userAgent) && /Mobile/i.test(userAgent));
   const isAndroid = /Android/i.test(userAgent);
-  const isKakaoTalk = /KAKAOTALK|KakaoTalk/i.test(userAgent);
+  const inAppBrowser = detectInAppBrowser(userAgent);
   const platform: DevicePlatform = isIOS
     ? "ios"
     : isAndroid
       ? "android"
       : "other";
 
-  if (isKakaoTalk) {
+  if (inAppBrowser) {
     return new Response(
       renderFallbackPage({
         diaryId,
         platform,
-        showOpenAppButton: platform !== "other"
+        inAppBrowser
       }),
       {
         status: 200,
@@ -235,7 +254,7 @@ export function GET(request: Request) {
     renderFallbackPage({
       diaryId,
       platform,
-      showOpenAppButton: false
+      inAppBrowser: null
     }),
     {
       status: 200,
